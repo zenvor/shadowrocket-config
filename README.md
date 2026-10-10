@@ -2,6 +2,10 @@
 
 专供 Shadowrocket（iOS/macOS）的域名规则与 DNS 配置片段，独立于 Mihomo 和 v2rayNG/v2rayN 仓库。不包含节点或凭据。
 
+## 版本要求
+
+使用 Shadowrocket 正式版 **2.2.92 或更新版本**（iOS/macOS）。直连域名专用 DNS 功能从 2.2.91 测试版 build 3410 加入，本配置以包含该功能的正式版 2.2.92 为最低要求。
+
 ## 文件及使用
 
 1. 先复制备份现用配置。
@@ -27,7 +31,7 @@
 
 核心后缀自动覆盖新子域，未来新独立域名需补充；仅有 IP 无域名的请求仍按后续 IP 分流。共享主机和 datadog/sift 关键词会影响其他应用请求。本配置不是账号安全保证。
 
-目前为私有仓库，下载需登录，不是匿名 raw 订阅。片段需人工合并，导入/更新不等于已加载生效。检查 DNS 上游、真实 IP、命中规则及出站日志；尚未在手机验收，未切换 VPN。
+本仓库已公开，可匿名访问 GitHub 和 raw 文件。片段需人工合并，导入/更新不等于已加载生效。检查 DNS 上游、真实 IP、命中规则及出站日志；尚未在手机验收，未切换 VPN。
 
 来源：
 - https://help.openai.com/zh-hans-cn/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps
@@ -37,3 +41,5 @@
 - https://github.com/LOWERTOP/Shadowrocket/wiki
 - https://apps.apple.com/us/app/shadowrocket/id932747118
 - https://shadowlaunch.com/
+
+- https://t.me/s/ShadowrocketNews?before=1620

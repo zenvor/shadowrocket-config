@@ -1,6 +1,6 @@
 # shadowrocket-config
 
-专供 Shadowrocket（iOS/macOS）的域名规则与 DNS 配置片段，独立于 Mihomo 和 v2rayNG/v2rayN 仓库。不包含节点或凭据。
+Shadowrocket（iOS/macOS）完整分流配置，基于 2.2.92 导出的默认配置，补充 DNS 与 OpenAI / ChatGPT、Anthropic / Claude 前置代理规则。
 
 ## 版本要求
 
@@ -9,10 +9,8 @@
 ## 文件及使用
 
 1. 先复制备份现用配置。
-2. `rules/ai-proxy.conf` 包含 52 条已知 OpenAI/Anthropic 及共享依赖域名前置 PROXY 规则。合并到已有 `[Rule]` 区段，放在广告、国内域名和 IP 直连规则之前；不要重复创建 `[Rule]`。保留原有 UDP443 拦截在最前。
-3. 保留自己的国内域名名单、私网/家庭局域网规则及其他特殊规则。当前文件不附带国内域名数据集，不能当作完整国内白名单使用。
-4. `examples/routing-tail.conf` 是末尾规则示例，.cn 后缀直连；GEOIP CN 不加 no-resolve，使未命中域名规则的请求解析真实 IP 后分流；其余 FINAL,PROXY。替换原 FINAL，而不是加在旧 FINAL 后面；需要的规则不能放在 FINAL 后面。
-5. `examples/dns.conf` 合并到已有 `[General]` 区段，未知域名/IP 分流查询默认用代理 Google/Cloudflare DoH；直连域名专用国内 DoH；节点域名独立解析。保存后使用该配置，全局路由选择“配置”。本仓库文件均为合并片段，不是含节点和国内名单的完整配置。
+2. [shadowrocket.conf](shadowrocket.conf) 是可直接导入的完整配置，包含 662 条规则。导入后选择“使用配置”，全局路由选择“配置”，代理使用自己已添加的节点。
+3. 默认及备用 DNS 使用经代理的 Google / Cloudflare DoH；直连域名与节点域名使用阿里 / 腾讯 DoH。保留默认的国内域名规则、.cn 直连、中国 IP 分流及 FINAL,PROXY；HTTP3/QUIC 拦截保持默认注释状态。
 
 `PROXY` 使用应用所选代理；不要导入社区帖子的 `CLAUDE0409 = direct` 或 `FINAL,DIRECT`。
 
@@ -31,7 +29,7 @@
 
 核心后缀自动覆盖新子域，未来新独立域名需补充；仅有 IP 无域名的请求仍按后续 IP 分流。共享主机和 datadog/sift 关键词会影响其他应用请求。本配置不是账号安全保证。
 
-本仓库已公开，可匿名访问 GitHub 和 raw 文件。片段需人工合并，导入/更新不等于已加载生效。检查 DNS 上游、真实 IP、命中规则及出站日志；尚未在手机验收，未切换 VPN。
+本仓库已公开，可匿名访问 GitHub 和 raw 文件。完整配置已在 macOS Shadowrocket 2.2.92 导入并设为默认，尚未进行联网测试或手机验收；导入成功不等于实际出站行为已验证。
 
 来源：
 - https://help.openai.com/zh-hans-cn/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps

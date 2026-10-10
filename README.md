@@ -2,6 +2,8 @@
 
 Shadowrocket（iOS/macOS）完整分流配置，基于 2.2.92 导出的默认配置，补充 DNS 与 OpenAI / ChatGPT、Anthropic / Claude 前置代理规则。
 
+新设备配置请看：[Shadowrocket 配置教程](docs/shadowrocket-setup.md)。
+
 ## 版本要求
 
 使用 Shadowrocket 正式版 **2.2.92 或更新版本**（iOS/macOS）。直连域名专用 DNS 功能从 2.2.91 测试版 build 3410 加入，本配置以包含该功能的正式版 2.2.92 为最低要求。

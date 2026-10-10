@@ -1,6 +1,6 @@
 # Shadowrocket 新设备配置教程
 
-适用于 iPhone、iPad 和 Mac，使用 Shadowrocket 正式版 **2.2.92 或更新版本**。本教程导入仓库中的完整 [shadowrocket.conf](../shadowrocket.conf)，不需要逐条添加规则，也不需要另行填写 DNS。
+适用于 iPhone、iPad 和 Mac，使用 Shadowrocket 正式版 **2.2.92 或更新版本**。本教程导入仓库中的完整配置，不需要逐条添加规则，也不需要另行填写 DNS。
 
 ## 1. 准备节点并备份
 
@@ -10,14 +10,25 @@
 
 ## 2. 下载并使用配置
 
-下面三种方式任选一种，**推荐方式一**，方便以后在软件中更新配置。
+先选择版本，两版路由规则相同，仅默认及备用 DNS 不同：
+
+| 版本 | 文件 | 未知域名默认 DNS |
+| --- | --- | --- |
+| 通用版 | [shadowrocket.conf](../shadowrocket.conf) | 阿里 DoH，优先照顾国内 CDN 调度 |
+| 激进版 | [shadowrocket-aggressive.conf](../shadowrocket-aggressive.conf) | Cloudflare DoH，经代理查询 |
+
+下面三种导入方式任选一种，**推荐方式一**，方便以后在软件中更新配置。
 
 ### 方式一：在 Shadowrocket 中从链接下载（推荐）
 
 1. 打开 Shadowrocket →「配置」→ 右上角添加按钮。
-2. 粘贴下面的完整地址，选择「下载」：
+2. 按选择的版本粘贴对应完整地址，选择「下载」：
 
-   <https://raw.githubusercontent.com/zenvor/shadowrocket-config/main/shadowrocket.conf>
+   通用版：<https://raw.githubusercontent.com/zenvor/shadowrocket-config/main/shadowrocket.conf>
+
+   激进版：<https://raw.githubusercontent.com/zenvor/shadowrocket-config/main/shadowrocket-aggressive.conf>
+
+   新版本需在仓库发布后才能从这些链接下载；本地修改不会自动更新线上文件。
 
 3. 下载完成后，按下方「导入后确认」选择并使用配置。
 
@@ -25,19 +36,19 @@
 
 ### 方式二：下载文件后用 Shadowrocket 打开
 
-1. 在浏览器打开上面的链接，将配置下载保存为 `shadowrocket.conf` 文件。
+1. 在浏览器打开上面的链接，将所选版本下载保存为对应的 `.conf` 文件。
 2. 在下载列表或文件管理器中选择该文件，将打开方式选择为 Shadowrocket，软件会自动导入；手机也可以通过分享菜单选择 Shadowrocket。
 3. 导入完成后，按下方「导入后确认」选择并使用配置。
 
 ### 方式三：在 Shadowrocket 中手动导入文件
 
-1. 在浏览器打开上面的链接，将配置下载保存为 `shadowrocket.conf` 文件。
+1. 在浏览器打开上面的链接，将所选版本下载保存为对应的 `.conf` 文件。
 2. 打开 Shadowrocket →「配置」→「导入」，手动选择下载好的 `.conf` 文件。Mac 的入口显示为「导入…」；部分手机版本可能显示为「从云导入」。
 3. 导入完成后，按下方「导入后确认」选择并使用配置。
 
 ### 导入后确认
 
-1. 在「配置」页面点击导入的 `shadowrocket.conf` →「使用配置」。
+1. 在「配置」页面点击导入的 `shadowrocket.conf` 或 `shadowrocket-aggressive.conf` →「使用配置」。
 2. 确认该文件出现默认圆点和使用中的勾选标记。
 3. 返回「首页」，确认「全局路由」选中的是 **「配置」**，并确认选中了自己的节点。软件初始化时通常已默认选择「配置」。
 
@@ -45,27 +56,38 @@
 
 ## 3. DNS 已经包含在配置中
 
-| 用途 | 服务器 | 查询路径 |
+| 用途 | 通用版 | 激进版 |
 | --- | --- | --- |
-| 默认 DNS | Google + Cloudflare DoH | 经当前代理 |
-| 备用 DNS | Google + Cloudflare DoH | 经当前代理 |
-| 已匹配直连域名的 DNS | 阿里 + 腾讯 DoH | 不带 DNS 代理标记 |
-| 代理节点自身的域名解析 | 阿里 + 腾讯 DoH | 不带 DNS 代理标记 |
+| 默认及备用 DNS | 阿里 DoH | Cloudflare DoH，经当前代理 |
+| 已匹配直连域名的 DNS | 阿里 DoH | 阿里 DoH |
+| 代理节点自身的域名解析 | 阿里 DoH | 阿里 DoH |
 
-当前配置内容如下，无需手动再添加：
+两版的共同设置，无需手动添加：
 
 ```ini
-dns-server = https://dns.google/dns-query#proxy,https://cloudflare-dns.com/dns-query#proxy
-fallback-dns-server = https://dns.google/dns-query#proxy,https://cloudflare-dns.com/dns-query#proxy
-direct-dns-server = https://dns.alidns.com/dns-query,https://doh.pub/dns-query
-proxy-dns-server = https://dns.alidns.com/dns-query,https://doh.pub/dns-query
+direct-dns-server = https://dns.alidns.com/dns-query
+proxy-dns-server = https://dns.alidns.com/dns-query
 dns-direct-system = false
 dns-direct-fallback-proxy = false
 ```
 
-本配置保留双 DNS 地址。社区手册描述多地址可并行查询，不能把它理解为严格按填写顺序逐个查询；最终行为需对照设备日志。备用 DNS 与默认 DNS 使用同一组国外服务器，国内专用 DNS 失败也可能使用该备用组。
+通用版的默认及备用设置：
 
-未知域名触发 IP 分流时使用默认 DNS；命中代理域名规则的请求可能直接交给节点远端解析，所以并非每个 AI 请求都会出现在本地 DoH 查询日志里。
+```ini
+dns-server = https://dns.alidns.com/dns-query
+fallback-dns-server = https://dns.alidns.com/dns-query
+```
+
+激进版的默认及备用设置：
+
+```ini
+dns-server = https://cloudflare-dns.com/dns-query#proxy
+fallback-dns-server = https://cloudflare-dns.com/dns-query#proxy
+```
+
+每项只填写一个 DNS 地址，避免同一项多个服务器产生并行查询；A/AAAA 查询、重试或备用查询仍可能产生多条日志。备用项与本版默认项使用同一个地址，不提供独立服务器冗余；保留该项是为了避免清空后回退到系统 DNS。激进版的国内专用 DNS 失败也可能回退到 Cloudflare。
+
+未知域名触发 IP 分流时，通用版使用阿里，激进版使用经代理的 Cloudflare；命中代理域名规则的请求可能直接交给节点远端解析，所以并非每个 AI 请求都会出现在本地 DoH 查询日志里。
 
 ## 4. 当前分流行为
 
@@ -82,6 +104,8 @@ dns-direct-fallback-proxy = false
 
 原版 Apple IP、Apple 服务和局域网等特殊直连规则保留，不是所有未知请求都只看中国 IP 归属。配置还保留系统隧道排除路由，部分地址可能不进入规则匹配。
 
+两版都不是全局代理。通用版的未知域名可能受国内 DNS 答案影响；激进版可能将国内 App 的未知域名调度到海外 CDN，再按 IP 走代理。
+
 核心域名的后缀规则覆盖其子域名，但未来出现的新独立 AI 域名仍需补充，未覆盖域名遵循后续分流规则。共享依赖规则也会影响其他应用访问这些服务。
 
 HTTP3/QUIC 拦截规则保持原版的注释状态，**当前未启用**。不要为了导入本配置额外开启它。
@@ -96,7 +120,7 @@ HTTP3/QUIC 拦截规则保持原版的注释状态，**当前未启用**。不�
 
 出现异常时，可在「数据」中查看代理日志和 DNS 日志；需要更多信息时，在「设置」→「诊断」开启日志记录，复现后导出 VPN 日志。对照发生时间、域名、DNS 答案、命中规则和出站节点判断。节点延迟数字或页面能打开，不能单独证明全部分流正确。
 
-本配置已在 macOS Shadowrocket 2.2.92 完成导入、默认选择和内容核对；**尚未完成联网测试或手机验收**。
+此前双 DNS 配置的实测日志已确认未知域名经国外 DNS 解析后，中国 IP 直连、其余代理；**本次两版单 DNS 配置尚未完成新的设备导入和联网验收**。
 
 ## 6. 更新与回退
 
@@ -104,11 +128,14 @@ HTTP3/QUIC 拦截规则保持原版的注释状态，**当前未启用**。不�
 
 从本地文件导入的配置，更新时重新下载上面的 raw 文件并导入，再选择新配置使用。仓库有更新不代表设备已经同步。
 
+切换版本时，在「配置」选择对应文件 →「使用配置」，确认默认圆点和勾选标记，再重新连接并重启受影响的应用。
+
 需要回退时，在「配置」中选择备份文件 →「使用配置」，然后重连并重启受影响的应用。
 
 ## 核对依据
 
-- [本仓库完整配置](../shadowrocket.conf)
+- [通用版完整配置](../shadowrocket.conf)
+- [激进版完整配置](../shadowrocket-aggressive.conf)
 - [Shadowrocket 官方发布频道：直连域名专用 DNS](https://t.me/s/ShadowrocketNews?before=1620)
 - [Shadowrocket 官方发布频道：节点域名 DNS](https://t.me/s/shadowrocketnews?after=931)
 - [LOWERTOP 社区手册](https://github.com/LOWERTOP/Shadowrocket/wiki)：非官方资料，用于核对下载、更新入口及 DNS 行为说明；本次 Mac 本地导入流程另已通过界面核对，手机流程仍待实际验证。
